@@ -31,20 +31,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.marziehnourmohamadi.productlist.domain.model.ProductItemModel
 
 
 @Composable
 fun DetailScreen(
-    videoId: String,
-    model: ProductItemModel,
+    navController: NavController,
+    model: ProductItemModel? = null,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         AsyncImage(
-            model = model.image,
+            model = model?.image,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -63,15 +64,15 @@ fun DetailScreen(
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconWithText(icon = Icons.Rounded.Star, text = model.rating.rate.toString())
+                IconWithText(icon = Icons.Rounded.Star, text = model?.rating?.rate.toString())
                 Spacer(modifier = Modifier.width(12.dp))
-                IconWithText(icon = Icons.Rounded.ThumbUp, text = model.rating.count.toString())
+                IconWithText(icon = Icons.Rounded.ThumbUp, text = model?.rating?.count.toString())
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 IconButton(onClick = {
-                    viewModel.toggleBookmark(model)
+                    viewModel.toggleBookmark(model!!)
                 }) {
                     Icon(
                         imageVector = Icons.Rounded.Favorite,
@@ -87,7 +88,7 @@ fun DetailScreen(
                 modifier = Modifier.padding(vertical = 4.dp)
             ) {
                 Text(
-                    text = model.title,
+                    text = model?.title ?: "",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -105,7 +106,7 @@ fun DetailScreen(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = model.price.toString(),
+                        text = model?.price.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -114,7 +115,7 @@ fun DetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = model.description,
+                text = model?.description ?:"" ,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -129,7 +130,7 @@ fun DetailScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = model.category,
+                text = model?.category ?: "",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
