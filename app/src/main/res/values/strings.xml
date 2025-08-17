@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">OmidPayProductList</string>
+
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="from_comments">(From %1$s Comments)</string>
 </resources>

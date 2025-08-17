@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.marziehnourmohamadi.productlist.domain.model.ProductItemModel
 import com.marziehnourmohamadi.productlist.navigation.BottomNavItem
 import com.marziehnourmohamadi.productlist.navigation.Routes
 import com.marziehnourmohamadi.productlist.ui.bookmark.BookmarkScreen
@@ -48,7 +49,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .imePadding(),
         topBar = {
@@ -128,7 +129,12 @@ fun NavGraph(navController: NavHostController, innerPadding: PaddingValues) {
             BookmarkScreen(navController)
         }
         composable(Routes.Detail.route) { backStackEntry ->
-            DetailScreen(navController)
+            val product = navController
+                .previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<ProductItemModel>("product")
+
+            DetailScreen(product)
         }
     }
 }

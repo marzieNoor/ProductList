@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.marziehnourmohamadi.productlist.navigation.Routes
 import com.marziehnourmohamadi.productlist.ui.commen.ProductListItem
 import com.marziehnourmohamadi.productlist.utils.onError
 import com.marziehnourmohamadi.productlist.utils.onLoading
@@ -28,9 +29,11 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
     val itemList by viewModel.productItemList.collectAsState()
 
 
-    Column(modifier = Modifier
-        .padding(18.dp)
-        .fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .padding(18.dp)
+            .fillMaxSize()
+    ) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -42,7 +45,12 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
 
                 LazyColumn {
                     items(count = data.size) { index ->
+
                         ProductListItem(model = data[index]) {
+                            navController.currentBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("product", data[index])
+                            navController.navigate(Routes.Detail.route)
                         }
                     }
                 }

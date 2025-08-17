@@ -1,5 +1,7 @@
 package com.marziehnourmohamadi.productlist.domain.model
 
+import java.io.Serializable
+
 
 data class ProductItemModel(
     val category: String,
@@ -9,4 +11,4 @@ data class ProductItemModel(
     val price: Double,
     val rating: RatingModel,
     val title: String
-)
+): Serializable
