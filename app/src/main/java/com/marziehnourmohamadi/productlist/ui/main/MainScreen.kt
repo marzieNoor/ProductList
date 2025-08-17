@@ -2,7 +2,6 @@ package com.marziehnourmohamadi.productlist.ui.main
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -37,7 +36,7 @@ import com.marziehnourmohamadi.productlist.ui.detail.DetailScreen
 import com.marziehnourmohamadi.productlist.ui.home.HomeScreen
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen() {
     val navController = rememberNavController()
     val items = listOf(BottomNavItem.Home, BottomNavItem.Bookmarks)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -50,8 +49,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .imePadding(),
+            .fillMaxSize(),
         topBar = {
             TopBar(
                 title = "Products",
