@@ -2,6 +2,7 @@ package com.marziehnourmohamadi.productlist.ui.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,18 +10,25 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +44,10 @@ import com.marziehnourmohamadi.productlist.R
 import com.marziehnourmohamadi.productlist.domain.model.ProductItemModel
 import com.marziehnourmohamadi.productlist.domain.model.RatingModel
 import com.marziehnourmohamadi.productlist.ui.theme.OmidPayProductListTheme
+import com.marziehnourmohamadi.productlist.utils.RequestState
+import com.marziehnourmohamadi.productlist.utils.onError
+import com.marziehnourmohamadi.productlist.utils.onLoading
+import com.marziehnourmohamadi.productlist.utils.onSuccess
 
 
 @Composable
@@ -44,19 +56,27 @@ fun DetailScreen(
     viewModel: DetailViewModel = hiltViewModel()
 ) {
 
-    Column(modifier = Modifier
-        .padding(horizontal = 16.dp)
-        .verticalScroll(rememberScrollState())) {
+    val isBookmarkProductItem by viewModel.isBookmarkProductItem.collectAsState()
 
-            AsyncImage(
-                model = model?.image,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .aspectRatio(1f)
-            )
+    LaunchedEffect(model?.id) {
+        model?.let { viewModel.loadBookmarkState(it) }
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+
+        AsyncImage(
+            model = model?.image,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .aspectRatio(1f)
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -77,15 +97,10 @@ fun DetailScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            IconButton(onClick = {
-                viewModel.toggleBookmark(model!!)
-            }) {
-                Icon(
-                    imageVector = Icons.Rounded.Favorite,
-                    contentDescription = "Bookmarked",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
+            BookmarkButton(
+                state = isBookmarkProductItem,
+                onToggle = { viewModel.toggleBookmark(model!!) }
+            )
         }
 
         Text(
@@ -151,6 +166,34 @@ private fun IconWithText(icon: ImageVector, text: String) {
             text = text,
             style = MaterialTheme.typography.labelMedium,
         )
+    }
+}
+
+@Composable
+fun BookmarkButton(
+    state: RequestState<Boolean>,
+    onToggle: () -> Unit,
+) {
+
+    Box(modifier = Modifier.size(24.dp)) {
+        state
+            .onLoading {
+                CircularProgressIndicator(
+                    strokeWidth = 2.dp
+                )
+            }
+            .onError { msg -> Snackbar { Text(msg) } }
+
+            .onSuccess { isBookmarked ->
+                IconButton(onClick = onToggle) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = if (isBookmarked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                        contentDescription = if (isBookmarked) "Remove bookmark" else "Add bookmark",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
     }
 }
 
