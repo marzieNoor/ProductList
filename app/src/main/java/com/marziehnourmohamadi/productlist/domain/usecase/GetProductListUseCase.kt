@@ -17,7 +17,7 @@ class GetProductListUseCase @Inject constructor(
         val fetchResult = productRepository.getProducts()
         fetchResult.fold(
             onSuccess = { result ->
-                    emit(RequestState.Success(result.map { it.toDomainModel() }.sortedBy { it.price }))
+                    emit(RequestState.Success(result.map { it.toDomainModel() }.sortedByDescending { it.price }))
             },
             onFailure = { throwable ->
                 emit(RequestState.Error(throwable.message ?: "An error has occurred"))

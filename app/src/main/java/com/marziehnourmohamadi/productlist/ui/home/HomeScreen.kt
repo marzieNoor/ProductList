@@ -55,10 +55,8 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
             .onLoading { CircularProgressIndicator() }
             .onError { msg -> Snackbar { Text(msg) } }
             .onSuccess { data ->
-                Log.e("itemList", "HomeScreen: ${data.size}")
-
                 LazyColumn {
-                    items(count = data.size) { index ->
+                    items(count = data.size, key = { item -> data[item].id }) { index ->
 
                         ProductListItem(model = data[index]) {
                             navController.currentBackStackEntry
