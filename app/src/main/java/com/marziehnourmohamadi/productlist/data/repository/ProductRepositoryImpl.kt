@@ -3,6 +3,7 @@ package com.marziehnourmohamadi.productlist.data.repository
 
 import com.marziehnourmohamadi.productlist.data.local.ProductDao
 import com.marziehnourmohamadi.productlist.data.local.toDomainModel
+import com.marziehnourmohamadi.productlist.data.local.toEntityModel
 import com.marziehnourmohamadi.productlist.data.remote.api.ProductApiService
 import com.marziehnourmohamadi.productlist.data.remote.model.ProductListResponsive
 import com.marziehnourmohamadi.productlist.domain.model.ProductItemModel
@@ -29,4 +30,16 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun toggleBookmark(bookmarked: ProductItemModel): Boolean {
+        return if (!bookmarkDao.isBookmarked(bookmarked.id)) {
+            bookmarkDao.insertBookmark(bookmarked.toEntityModel())
+            true
+        } else {
+            bookmarkDao.deleteBookmark(bookmarked.toEntityModel())
+            false
+        }
+    }
+
+    override suspend fun isBookmarked(bookmarked: ProductItemModel) =
+        bookmarkDao.isBookmarked(bookmarked.id)
 }

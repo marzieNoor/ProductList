@@ -7,4 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductRepository {
     suspend fun getProducts(): Result<ProductListResponsive>
     suspend fun getBookmarks():  Flow<List<ProductItemModel>>
+    suspend fun toggleBookmark(bookmarked: ProductItemModel):Boolean
+    suspend fun isBookmarked(bookmarked: ProductItemModel):Boolean
+
 }
