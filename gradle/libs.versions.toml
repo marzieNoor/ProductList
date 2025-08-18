@@ -11,7 +11,6 @@ composeBom = "2024.09.00"
 ksp = "2.0.21-1.0.27"
 
 retrofit = "2.11.0"
-http-interceptor = "4.12.0"
 
 coil = "3.2.0"
 
@@ -20,7 +19,7 @@ hiltNavigationCompose = "1.2.0"
 
 lifecycleCompose = "2.9.0"
 
-roomVersion  = "2.7.2"
+roomVersion  = "2.7.1"
 
 serialization = "2.0.21"
 
@@ -41,7 +40,6 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-retrofit-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "http-interceptor" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gsonconverter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 
@@ -78,7 +76,6 @@ hilt-compiler = [
 retrofit = [
     "retrofit",
     "retrofit-gsonconverter",
-    "retrofit-interceptor"
 ]
 
 coil = [
