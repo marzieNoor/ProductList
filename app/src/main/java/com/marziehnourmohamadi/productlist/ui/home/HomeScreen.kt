@@ -1,6 +1,6 @@
 package com.marziehnourmohamadi.productlist.ui.home
 
-import android.util.Log
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.marziehnourmohamadi.productlist.navigation.Routes
+import com.google.gson.Gson
 import com.marziehnourmohamadi.productlist.ui.commen.ProductListItem
 import com.marziehnourmohamadi.productlist.utils.onError
 import com.marziehnourmohamadi.productlist.utils.onLoading
@@ -59,10 +59,8 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                     items(count = data.size, key = { item -> data[item].id }) { index ->
 
                         ProductListItem(model = data[index]) {
-                            navController.currentBackStackEntry
-                                ?.savedStateHandle
-                                ?.set("product", data[index])
-                            navController.navigate(Routes.Detail.route)
+                            val encodedProduct = Uri.encode(Gson().toJson(data[index]))
+                            navController.navigate("detail/$encodedProduct")
                         }
                     }
                 }

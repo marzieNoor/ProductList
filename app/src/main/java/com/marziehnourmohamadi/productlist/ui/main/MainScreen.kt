@@ -1,5 +1,6 @@
 package com.marziehnourmohamadi.productlist.ui.main
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,16 +26,21 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.google.gson.Gson
 import com.marziehnourmohamadi.productlist.domain.model.ProductItemModel
 import com.marziehnourmohamadi.productlist.navigation.BottomNavItem
 import com.marziehnourmohamadi.productlist.navigation.Routes
 import com.marziehnourmohamadi.productlist.ui.bookmark.BookmarkScreen
 import com.marziehnourmohamadi.productlist.ui.detail.DetailScreen
 import com.marziehnourmohamadi.productlist.ui.home.HomeScreen
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun MainScreen() {
@@ -73,6 +80,15 @@ fun MainScreen() {
                             label = { Text(item.title) },
                             selected = currentRoute == item.route,
                             onClick = {
+//                                navController.navigate(item.route) {
+//                                     popUpTo(navController.graph.startDestinationId) {
+//                                         saveState = true
+//                                     }
+//                                     launchSingleTop = true
+// //                                    // فقط برای Home restore کن
+//                                    restoreState = (item.route == Routes.Bookmark.route)
+//
+//                            }
                                 navController.navigate(item.route) {
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
@@ -126,13 +142,18 @@ fun NavGraph(navController: NavHostController, innerPadding: PaddingValues) {
         composable(Routes.Bookmark.route) {
             BookmarkScreen(navController)
         }
-        composable(Routes.Detail.route) { backStackEntry ->
-            val product = navController
-                .previousBackStackEntry
-                ?.savedStateHandle
-                ?.get<ProductItemModel>("product")
 
-            DetailScreen(product)
+        composable(
+            route = Routes.Detail.route,
+            arguments = listOf(navArgument("productJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+
+            val productJson = backStackEntry.arguments?.getString("productJson")
+            val product = Gson().fromJson(productJson, ProductItemModel::class.java) // Decode recipe JSON
+            if (product != null) {
+                DetailScreen(model = product)
+            }
         }
+
     }
 }
