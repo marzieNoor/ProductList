@@ -80,15 +80,6 @@ fun MainScreen() {
                             label = { Text(item.title) },
                             selected = currentRoute == item.route,
                             onClick = {
-//                                navController.navigate(item.route) {
-//                                     popUpTo(navController.graph.startDestinationId) {
-//                                         saveState = true
-//                                     }
-//                                     launchSingleTop = true
-// //                                    // فقط برای Home restore کن
-//                                    restoreState = (item.route == Routes.Bookmark.route)
-//
-//                            }
                                 navController.navigate(item.route) {
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
